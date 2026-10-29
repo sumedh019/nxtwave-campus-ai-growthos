@@ -1,1 +1,261 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Campus AI GrowthOS | NxtWave Challenge</title>
+<style>
+:root{font-family:Arial,sans-serif;color:#eaf2ff;background:#0b1020}
+*{box-sizing:border-box}
+body{margin:0}
+header{padding:22px 5%;border-bottom:1px solid #293650;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+h1,h2,h3{margin:0 0 14px}
+h1{font-size:25px}
+h2{font-size:20px}
+small,.muted{color:#9eaec9}
+main{max-width:1250px;margin:auto;padding:25px}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:25px}
+button{background:#24334f;color:white;border:1px solid #405275;padding:11px 15px;border-radius:9px;cursor:pointer}
+button:hover{background:#354968}
+button.active,.primary{background:#b6f272;color:#101925;border-color:#b6f272;font-weight:bold}
+.card{background:#131e33;border:1px solid #2b3b59;border-radius:15px;padding:22px;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:15px}
+.metric{font-size:32px;font-weight:bold;color:#b6f272}
+label{display:block;margin:14px 0 5px;color:#bdc9df}
+input,select{width:100%;padding:12px;background:#0b1427;color:white;border:1px solid #405275;border-radius:8px}
+table{width:100%;border-collapse:collapse}
+td,th{padding:12px;text-align:left;border-bottom:1px solid #32415b}
+th{color:#aabbd2}
+.progress{background:#344159;border-radius:20px;height:13px;overflow:hidden;margin-top:12px}
+.fill{background:#b6f272;height:100%}
+.notice{padding:13px;border-radius:9px;background:#21344b;margin-top:14px}
+.hidden{display:none}
+.hero{padding:35px 0}
+.hero h1{font-size:36px}
+.tag{color:#b6f272;font-weight:bold}
+footer{text-align:center;padding:30px;color:#9eafc6}
+@media(max-width:650px){main{padding:15px}header{padding:15px}table{font-size:12px}}
+</style>
+</head>
+<body>
+<header>
+<div>
+<h1>⚡ Campus AI GrowthOS</h1>
+<small>NxtWave Growth Intern Challenge • 7-Day Campaign</small>
+</div>
+<span class="tag">DEMO / SIMULATION</span>
+</header>
+<main>
+<div class="hero">
+<h1>500 Students. 7 Days. ₹2,000.</h1>
+<p class="muted">Campus-powered growth engine for “Build Your First AI Project in 60 Minutes”.</p>
+</div>
+<nav>
+<button onclick="show('dashboard')" id="nav-dashboard">Dashboard</button>
+<button onclick="show('register')" id="nav-register">Registration</button>
+<button onclick="show('ambassadors')" id="nav-ambassadors">Ambassadors</button>
+<button onclick="show('insights')" id="nav-insights">Growth Insights</button>
+<button onclick="show('budget')" id="nav-budget">Budget</button>
+</nav>
+
+<section id="dashboard">
+<div class="grid">
+<div class="card"><small>Verified Demo Signups</small><div class="metric" id="total">0</div></div>
+<div class="card"><small>Target</small><div class="metric">500</div></div>
+<div class="card"><small>Referral Signups</small><div class="metric" id="referrals">0</div></div>
+<div class="card"><small>Target Cost / Signup</small><div class="metric">₹4</div></div>
+</div>
+<div class="card">
+<h2>Campaign Progress</h2>
+<p id="progressText"></p>
+<div class="progress"><div class="fill" id="progressBar"></div></div>
+</div>
+<div class="grid">
+<div class="card">
+<h2>Acquisition Sources</h2>
+<div id="sources"></div>
+</div>
+<div class="card">
+<h2>Top Ambassadors</h2>
+<div id="leaders"></div>
+</div>
+</div>
+<div class="card">
+<h2>Campaign Controls</h2>
+<p class="muted">Sample records are simulated. They are not real student registrations.</p>
+<button onclick="seed()">Load Demo Data</button>
+<button onclick="reset()">Reset Data</button>
+<button onclick="exportCSV()">Export CSV</button>
+</div>
+</section>
+
+<section id="register" class="hidden">
+<div class="card">
+<h2>Register for the Free AI Workshop</h2>
+<p class="muted">Build Your First AI Project in 60 Minutes</p>
+<form id="registrationForm">
+<label>Student Name</label>
+<input id="studentName" required maxlength="100">
+<label>Email Address</label>
+<input id="email" type="email" required>
+<label>College</label>
+<input id="college" required maxlength="150">
+<label>Engineering Branch</label>
+<select id="branch"><option>CSE</option><option>AI & ML</option><option>IT</option><option>ECE</option><option>Other</option></select>
+<label>Graduation Year</label>
+<select id="year"><option value="2027">2027</option><option value="2026">2026</option><option value="other">Other</option></select>
+<label>Where did you hear about us?</label>
+<select id="source"><option value="Ambassador">Campus Ambassador</option><option value="Peer Referral">Peer Referral</option><option value="Club">Student Club</option><option value="Paid">Instagram Promotion</option><option value="Direct">Direct</option></select>
+<label>Referral Code (Optional)</label>
+<input id="refcode" placeholder="Enter referral code">
+<label><input type="checkbox" id="consent" required style="width:auto"> I agree to this demo registration being stored in this browser.</label>
+<p><button class="primary" type="submit">Complete Registration</button></p>
+</form>
+<div id="registrationResult"></div>
+</div>
+</section>
+
+<section id="ambassadors" class="hidden">
+<div class="card">
+<h2>Campus Ambassador Program</h2>
+<p class="muted">Create unique invite codes and track eligible registrations.</p>
+<label>Ambassador Name</label><input id="ambName">
+<label>College</label><input id="ambCollege">
+<p><button class="primary" onclick="addAmbassador()">Add Ambassador</button></p>
+<div id="ambResult"></div>
+</div>
+<div class="card"><h2>Leaderboard</h2><div id="ambTable"></div></div>
+</section>
+
+<section id="insights" class="hidden">
+<div class="card">
+<h2>AI-Inspired Growth Recommendations</h2>
+<p class="muted">Explainable, rule-based analysis of campaign performance. No external AI model is connected.</p>
+<div id="insightResults"></div>
+</div>
+<div class="card">
+<h2>7-Day Acquisition Plan</h2>
+<table><tr><th>Day</th><th>Target</th><th>Action</th></tr>
+<tr><td>1</td><td>20</td><td>Ambassador onboarding</td></tr>
+<tr><td>2</td><td>45</td><td>Class-group launch</td></tr>
+<tr><td>3</td><td>65</td><td>Referral challenge</td></tr>
+<tr><td>4</td><td>90</td><td>Club expansion</td></tr>
+<tr><td>5</td><td>110</td><td>Paid test and optimization</td></tr>
+<tr><td>6</td><td>100</td><td>Referral push</td></tr>
+<tr><td>7</td><td>70</td><td>Final campaign push</td></tr></table>
+</div>
+</section>
+
+<section id="budget" class="hidden">
+<div class="card">
+<h2>₹2,000 Campaign Budget</h2>
+<table>
+<tr><th>Category</th><th>Budget</th></tr>
+<tr><td>Paid Instagram experiment</td><td>₹1,000</td></tr>
+<tr><td>Ambassador rewards</td><td>₹600</td></tr>
+<tr><td>Creative materials</td><td>₹200</td></tr>
+<tr><td>Contingency</td><td>₹200</td></tr>
+</table>
+<label>Actual Demo Spend (₹)</label>
+<input type="number" id="spent" min="0" max="2000" value="0" onchange="saveSpend()">
+<div class="notice" id="budgetStatus"></div>
+</div>
+</section>
+</main>
+<footer>Campus AI GrowthOS • NxtWave Growth Challenge • Prototype, not an official NxtWave registration portal</footer>
+
+<script>
+const KEY="growthos-demo-v1";
+let db;
+function empty(){return {students:[],ambassadors:[],spent:0,demo:true}}
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||empty()}catch{return empty()}}
+db=load();
+function save(){localStorage.setItem(KEY,JSON.stringify(db));render()}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function code(){return Math.random().toString(36).slice(2,10).toUpperCase()}
+function link(c){return location.origin+location.pathname+"?ref="+encodeURIComponent(c)+"#register"}
+function show(name){
+document.querySelectorAll("main section").forEach(s=>s.classList.toggle("hidden",s.id!==name));
+document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.id==="nav-"+name));
+render();
+}
+function addAmbassador(){
+let name=document.getElementById("ambName").value.trim();
+let college=document.getElementById("ambCollege").value.trim();
+if(!name||!college)return alert("Enter name and college");
+let c=code();
+db.ambassadors.push({name,college,code:c});
+save();
+document.getElementById("ambResult").innerHTML='<div class="notice">Ambassador created. Referral URL:<br><input readonly value="'+esc(link(c))+'"></div>';
+document.getElementById("ambName").value="";
+document.getElementById("ambCollege").value="";
+}
+document.getElementById("registrationForm").addEventListener("submit",e=>{
+e.preventDefault();
+let email=document.getElementById("email").value.trim().toLowerCase();
+if(db.students.some(s=>s.email===email))return alert("Email already registered");
+let year=document.getElementById("year").value;
+if(year==="other")return alert("This campaign is for final-year engineering students");
+let ref=document.getElementById("refcode").value.trim().toUpperCase();
+let parent=[...db.students,...db.ambassadors].find(s=>s.code===ref);
+let source=document.getElementById("source").value;
+if(ref&&!parent)return alert("Invalid referral code");
+if(parent)source=db.ambassadors.includes(parent)?"Ambassador":"Peer Referral";
+let c=code();
+db.students.push({
+name:document.getElementById("studentName").value.trim(),
+email,college:document.getElementById("college").value.trim(),
+branch:document.getElementById("branch").value,
+year,source,ref,code:c,demo:true
+});
+save();
+document.getElementById("registrationResult").innerHTML='<div class="notice">Registration recorded in this browser (demo only).<p>Your referral link:</p><input readonly value="'+esc(link(c))+'"></div>';
+e.target.reset();
+});
+function seed(){
+db=empty();
+for(let i=1;i<=10;i++)db.ambassadors.push({name:"Demo Ambassador "+i,college:"Demo College "+i,code:"AMB"+i});
+for(let i=1;i<=130;i++){
+let source=i<=65?"Ambassador":i<=105?"Peer Referral":i<=125?"Club":"Paid";
+db.students.push({name:"Demo Student "+i,email:"demo"+i+"@example.test",college:"Demo Engineering College",branch:"CSE",year:"2027",source,ref:source==="Ambassador"?"AMB"+(i%10+1):"",code:"DEMO"+i,demo:true});
+}
+db.spent=200;save();
+}
+function reset(){if(confirm("Clear all browser demo data?")){db=empty();save()}}
+function exportCSV(){
+let rows=[["Name","Email","College","Branch","Year","Source","Referral Code","Demo"],...db.students.map(s=>[s.name,s.email,s.college,s.branch,s.year,s.source,s.ref,s.demo])];
+let csv=rows.map(r=>r.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(",")).join("\r\n");
+let a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="growthos-registrations.csv";a.click();URL.revokeObjectURL(a.href);
+}
+function saveSpend(){db.spent=Math.min(2000,Math.max(0,Number(document.getElementById("spent").value)||0));save()}
+function render(){
+let n=db.students.length,r=db.students.filter(s=>s.ref).length;
+document.getElementById("total").textContent=n;
+document.getElementById("referrals").textContent=r;
+document.getElementById("progressText").textContent=n+" / 500 registrations — "+Math.round(n/500*100)+"% of target";
+document.getElementById("progressBar").style.width=Math.min(100,n/500*100)+"%";
+let counts={};
+db.students.forEach(s=>counts[s.source]=(counts[s.source]||0)+1);
+document.getElementById("sources").innerHTML=Object.entries(counts).map(([k,v])=>'<p>'+esc(k)+': <b>'+v+'</b></p>').join("")||"No registrations yet";
+let leaders=db.ambassadors.map(a=>({...a,count:db.students.filter(s=>s.ref===a.code).length})).sort((a,b)=>b.count-a.count);
+document.getElementById("leaders").innerHTML=leaders.slice(0,5).map(a=>'<p>'+esc(a.name)+' — '+a.count+' registrations</p>').join("")||"No ambassadors yet";
+document.getElementById("ambTable").innerHTML='<table><tr><th>Ambassador</th><th>Referrals</th><th>Code</th></tr>'+leaders.map(a=>'<tr><td>'+esc(a.name)+'</td><td>'+a.count+'</td><td>'+esc(a.code)+'</td></tr>').join("")+'</table>';
+let insights=[];
+if(n<130)insights.push("Early-stage priority: recruit and activate campus ambassadors.");
+if(n>=130&&n<330)insights.push("Expansion priority: compare club outreach with ambassador and peer referral performance.");
+if(n>=330)insights.push("Final-stage priority: focus outreach on proven acquisition channels.");
+if(r<n*.2)insights.push("Referral activity is relatively low. Test a clearer invitation message.");
+else insights.push("Referrals are contributing meaningfully to acquisition.");
+if(db.spent>0)insights.push("Recorded spend per signup: ₹"+(db.spent/Math.max(n,1)).toFixed(2)+". This includes simulated signups.");
+document.getElementById("insightResults").innerHTML=insights.map(s=>'<div class="notice">'+esc(s)+'</div>').join("");
+document.getElementById("spent").value=db.spent;
+document.getElementById("budgetStatus").textContent="Recorded: ₹"+db.spent+" | Remaining: ₹"+(2000-db.spent);
+}
+let ref=new URLSearchParams(location.search).get("ref");
+if(ref){document.getElementById("refcode").value=ref.toUpperCase();show("register")}
+else show("dashboard");
+</script>
+</body>
+</html>
+
